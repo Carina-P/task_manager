@@ -90,12 +90,14 @@ def profile(username):
 
     return redirect(url_for("login"))
 
+
 @app.route("/logout")
 def logout():
     # remove user from session cookies
     flash("You have been logged out")
     session.pop("user")
     return redirect(url_for("login"))
+
 
 @app.route("/add.task", methods=["GET", "POST"])
 def add_task():
@@ -115,6 +117,14 @@ def add_task():
 
     categories = mongo.db.categories.find().sort("category_name", 1)
     return render_template("add_task.html", categories=categories)
+
+
+@app.route("/edit_task/<task_id>", methods=["GET", "POST"])
+def edit_task(task_id):
+    task = mongo.db.tasks.find_one({"_id": ObjectId(task_id)})
+
+    categories = mongo.db.categories.find().sort("category_name", 1)
+    return render_template("edit_task.html", task=task, categories=categories)
 
 
 if __name__ == "__main__":
